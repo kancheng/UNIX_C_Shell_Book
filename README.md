@@ -585,3 +585,44 @@ GNU 原本有打算直接採用"Mach"計劃。但無奈，這一等，從 80 年
 UNIX 作業系統在這 20 幾年的發展過程當中，實際上產生過的 shell 實在是不計其數的多。但在各版本之間通用且具有重要的地位的，只有三個。如果依產生的前後次序來排列的話，它們分別是 Bourne shell、C shell 及 Korn shell。
 
 以下是一個簡單的對照表。
+
+
+| Shell | 創作者 | 符號 | 指令名稱 |
+| :----: | :----: | :----: | :----: |
+| Bourne | S.R.Bourne | $ | sh |
+| C | Bill Joy | % |csh  |
+| Korn | David G. Kron | $ | ksh |
+   
+## 2-2-1 Bourne Shell
+
+UNIX 系統最早出現的 Shell。開發於貝爾實驗室（Bell Laboratories, Murray Hill, New Jersey.），它的創造者是 S. R. Bourne，所以命名為“Bourne Shell”。一直到今天，在各版 UNIX 作業系統內所採用的 Standard Shell 一直均是以它為主。所謂的 standard shell 的意思便是指當一個使用者在沒有指定要使用何種 shell 的情況下，作業系統會自動幫你設定的 shell，我們稱它為 standard shell。
+
+當然它也已經被視為是 UNIX 作業系統必備的一部份了。
+
+因為 Bourne Shell 在執行效率上優於其他的 Shell，所以你也可在 UNIX 系統中找尋到以它的語法所寫成的執行檔。但是它並不支援 aliases 與 history 功能，同時在 Job control 的功能上也比較簡單。它的前景與背景工作是無法任意調換的。在整體的功能上，對今日的使用者而言已明顯地有些不足之處。所以也有一些 shell 以它為基礎，發展出包含新功能的新版本。譬如，你可以在 UNIX System V Release 4 版本中發現到有一個 shell 叫作 “jsh”。
+
+它便是改進了關於 job control 功能的 Bourne Shell 版本。另外還有 Free Software Foundation 也有發展一個 shell 叫 “bash”，縮寫的意思是“bourne-again”。它的整體功能趨近於後來所發展出來的“Korn shell”。
+
+不過它並不包括在各 UNIX 作業系統中。 Bourne Shell 所使用的起始檔案名稱為“.profile”和“.login”。
+
+在變數上支援局部變數（local variables）與整體變數（global variables）兩種。整體變數必須以 export glo_var_name 的方式宣告之。所支援的控制程序有“if-then-else”，“case”，“for”，“while”及“until”等。但請注意在 Bourne Shell 中是沒有“goto”功能的（這是比較嚴謹的作法）。
+
+## 2-2-2 Korn Shell
+
+Korn Shell 出現在 Bourne Shell 與 C Shell 之後，在功能上則吸收了 C Shell 的 aliases, history 等。而語法則是與 Bourne Shell 相容，所以在 Bourne Shell 之下所開發的 shell script，也可以在其中執行。它也是以作者的名字命名的 shell。
+
+原作者是 David G. Kron。Korn Shell 也是開發於美國貝爾實驗室（AT&T Bell Laboratories, Murray Hill, New Jersey.）。
+
+因為在開發的時間上比較晚，現今有支援它的版本，除了 UNIX System V Release 4 版本已將它列為標準配備外，其他版本的 UNIX 作業系統中並不多見。在大部份的 BSD 版本的 UNIX 作業系統並不支援。Korn Shell 所使用的起始檔案名稱與 Bourne Shell 所使用的名稱相同也叫做 “.profile” 和 “.login”。
+
+## 2-2-3 C Shell
+
+C Shell 發展於美國加州州立大學柏克萊分校（University of California, Berkeley, California.），原始版本的 C Shell 創作者是 Bill Joy（這位大哥後來任職於 Sun Microsystems），當時這位大哥還是柏克萊的研究生。由於這個 shell 的語法與 C 語言（C Language）極相似而得此名。此 Shell 對慣用 C 語言的使用者而言無疑是一大福音。
+
+它出現的時間相當早，早到在 UNIX Time-Sharing System, Sixth Edition 中便已支援。所以如今各版本的 UNIX 作業系統中，BSD 版本的 UNIX 作業系統均有支援，而 SYSTEM V 版本的 UNIX 作業系統，要找到不支援 C Shell 也實在是“很難”（因為我目前找不到不支援 C Shell 的 UNIX OS）。所以可以說 C shell 已經是今日 UNIX 作業系統的一部份了。
+
+
+在特殊功能上，它是最早提供“別名（aliases）”、“指令使用記錄（history）”與“工作控制（Job Control）”功能的 shell。在今天，這幾樣功能幾乎可以說是 UNIX 作業系統的重要特色。C Shell 所使用的啟始檔案名稱與前面的兩個 shell 不同。它的特殊檔案為 “.cshrc”、“.login”與 “.logout”。在其中所使用的設定語法也不相同，所以在使用上並不能相容。 C Shell 所提供的變數有預設變數（predefined variables）及環境變數（environment variables）兩種。分別以內建指令 set 及 setenv 去設定它們。在目前 C Shell 也有他的更新版，不過並非由原作者操刀，而是在 1980 年左右，由一群工商與學術界的人士共同合作的成果 -- 也就是今天的 'T' C Shell，簡稱與指令相同叫 tcsh。 
+
+tcsh 目前發展的相當不錯，除了修更 csh 的一些 bugs 外，還增加了不少新的功能，有空的話不妨換他還試試看有何不同。
+
