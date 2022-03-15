@@ -853,3 +853,104 @@ command1 ； command2 ； command3；.....
 | 失敗 | \|\| | 執行 |
 | 執行成功 | && | 執行 | 
 | 失敗 | && | 不執行 | 
+
+特殊符號“||”相當於 else、而特殊符號“&&”則相當於 than。這種相當特殊的指令控制，或許在正常的指令行模式下難得用上，甚至有可能根本用不上。但在 C Shell 程式設計上可是一項相當重要的功能呢。我們來兩個實際應用的例子：
+
+
+```
+% grep error ecs.sum || lpr ecs.sum
+```
+
+
+當指令 grep 如果在檔案 “ecs.sum” 中有找到字串 “error”，則不執行列印。如果沒找到任何 “error” 則執行列印檔案 “ecs.sum”。
+
+```
+% ps axu | grep rpc.pcnfsd | grep -v grep > /dev/null && wall pcnfs.run
+```
+
+上面這個例子第一個指令的部份比較複雜，整個指令的功能是找尋系統的處理程序中是否有 “rpc.pcnfsd”在執行，如果有則執行第二個指令 wall 向上機的使用者說明，說明的文字內容便是
+檔案“pcnfs.run”。如果找尋不到，則不執行第二個指令 wall。
+
+相信讀者可能會質疑有可能下這樣複雜的指令嗎？老實說在指令行模式下真得相當少。但這項功能在 C Shell 程式設計上則會運用得上，千萬別忽視。切記！切記！
+
+## 3-2 輸入/輸出重導向（I/O Redirection）
+
+“輸入/輸出重導向”是 shell 用來處理標準輸入（standard input）、標準輸出（standard output）與標準錯誤（standard error）等訊息的重要功能。它可將指令執行的輸出導向到檔案中，亦可把執行程式或指令所需的引數或輸入由檔案導入。或把指令執行錯誤時所產生的錯誤訊息導向 /dev/null。 其應用範圍可說相當廣範。
+
+![](3-2-0-p.png)
+
+## 3-2-1 輸入重導向（Input Redirection）的運用
+
+符號“<”－－重導向標準輸入
+
+如右圖所示，通常一個程式或指令所須輸入的參數便稱為標準輸入（standard input）。在導入的運
+
+用上，可用來導入檔案。語法如下：
+
+```
+使用語法 command < file
+```
+
+下面的例子，第一是將檔案“mail.file”重導入指令 mail 中，做為傳送 mail 給使用者 akk 的內容。第二則是將檔案“file.data”重導入指令“wc -l”中，用以計算該檔案的行數、字數（word）與字元數。
+
+```
+1 % mail akk < mail.file
+2 % wc < file.data
+1 11 66
+```
+雖然以上重導入的使用方法是正確的，但對於一般的指令的運用來說實在是多此一舉，因為像這類指令的語法均會支援檔案輸入的功能。但是重導入的運用卻依然不可輕意忽視，有許多軟體公司所發展的應用程式或自行開發的 shell 程式（一般稱為 shell script），大部份多採用交談式的方式來要求使用者輸入所需的資料，像此類的交談資料，可預先做成一個檔案再以重導入的方式執行，不但省去交談的程序更可進一步將簡化作業程序。
+
+### 符號 “<<”－－字元的重導向
+
+使用語法 command << word
+
+```
+word or data keyin
+....
+word
+```
+
+在上面我們所提到的重導向符號“<”它所能處理的對像是檔案，如果不是檔案便無法處理。而在這裡將為你介紹的符號“<<”則是用來重導向文字使用的。我們來看它運用在指令行模式下的情況。
+
+```
+% mail akk << EOF!
+testting I/O Redirection function
+testting I/O Redirection function
+testting I/O Redirection function
+EOF!
+%
+```
+
+在上面我們使用了符號 “<<” 來將我們想要傳 mail 給使用者 akk 的訊息一一由鍵盤鍵入。指令行最後的“EOF!”代表當我們見要鍵入內容的結尾用字－－我們可稱它為“關鍵字”。
+當我們鍵入指令“mail akk << EOF!”後 return，便可開始鍵入想要傳送的訊息內容，如果想要結束僅需在新的一行鍵入“關鍵字”便可。
+
+這個符號“<<”常被運用在檔案編輯的指令上，如指令 ed、ex。如下例子：
+```
+% ed sed1.f << ok
+g/root/s/0/1/
+g/akira/d
+w sed2.f
+q
+ok
+```
+
+上例我們運用這種重導入的方式來編輯檔案“sed1.f”。第二行與第三行是指令 ed 的編輯指令，前者是找尋檔案內所有的“root”字串，並將該行的“０”代換為“１”。後者則是找尋檔案內所有的“akira”字串，並將該行清除。第四行也是編輯指令，用意是將編輯的結果寫到另一個檔案“sed2.f”中。第五行則是退出指令 ed 編輯器。第六行便是重導入的“關鍵字”，告訴導入終止。如果有機會試一試這種用法！使用它來編輯檔案，有時候比你進入 vi 編輯器做還快速。
+
+
+## 參考資料
+
+### 參考書籍
+
+1. The Design and Inplumentation of the 4.3BSD UNIX Operating System
+
+2. Computer -- The History of the Information Machine
+
+3. Life with UNIX -- A Guide for Everyone
+
+### 網路文獻
+
+1. 20 Years of Berkeley Unix : From AT&T-Owned to Freely Redistributable
+
+2. The Creation of the UNIX Operating System
+
+3. The Role of BSD in the Development of UNIX
